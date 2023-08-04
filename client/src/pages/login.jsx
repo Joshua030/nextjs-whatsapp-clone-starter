@@ -1,16 +1,22 @@
+import { CHECK_USER_ROUTE } from "@/utils/ApiRoutes";
 import { firebaseAuth } from "@/utils/FirebaseConfig";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import Image from "next/image";
 import { FcGoogle } from "react-icons/fc";
+import axios from 'axios';
+import { useRouter } from "next/router";
+
 
 const login = () => {
+  const router = useRouter();
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
     const {user: {displayName: name, email, photoUrl: profileImage}} = await signInWithPopup(firebaseAuth, provider);
-   
     try {
       if(email){
-
+  const {data} = await axios.post(CHECK_USER_ROUTE, {email});
+  console.log({data});
+if(!data.status) router.push("/onboarding")
       }
     } catch (error) {
       console.log(error);
